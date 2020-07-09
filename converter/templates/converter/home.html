@@ -1,0 +1,55 @@
+{% extends 'converter/main.html' %}
+
+{% block content %}
+
+
+<br/>  
+
+
+<div class="container-fluid">
+	<h1>XML CONVERTER</h1><br/>
+	<form class="form-inline my-2 my-lg-0"  method="POST">
+		{% csrf_token %}
+	  	<input name="test" class="form-control mr-sm-2" type="search" placeholder="Enter directory path..." aria-label="Search">
+	  	<button class="btn btn-outline-success my-2 my-sm-0" type="submit">GENERATE</button>
+	</form><br/>
+	<form method="POST">  
+		{% csrf_token %}
+		<div class="container-fluid">
+			<p>+ CHOOSE A FOLDER WHICH CONTAINS XMLs TO BE CONVERTED TO CSV</p>
+			<input type="file" id="filepicker" name="fileList" webkitdirectory multiple />
+			<ul id="listing"></ul>
+		</div>
+
+		<br/>
+
+		<div class="container-fluid">
+			<label for="cars">+ CHOOSE A STUDIO:</label>
+
+			<select name="studio" id="studio">
+			  <option value="disney">Disney</option>
+			  <option value="discovery">Discovery</option>
+			  <option value="a&e">A&E</option>
+			</select>
+		</div>
+
+		<br/>
+
+		<div class="container-fluid">
+			<button class="btn btn-sm btn-primary">GENERATE CSV</button>
+		</div>
+
+	</form>
+</div>
+
+<br/><hr/>
+
+<div class="container-fluid text-info">
+	<br/>
+	<p>***OPTIONAL / FUTURE FEATURES***</p>
+	<button>CHOOSE HEADERS</button>
+	<button>PREVIEW</button>
+	<br/><br/>
+</div>
+
+{% endblock %}

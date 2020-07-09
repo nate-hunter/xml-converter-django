@@ -1,0 +1,9 @@
+{% load static %}
+
+<!-- Image and text -->
+<nav class="navbar navbar-dark bg-dark">
+  <a class="navbar-brand" href="{% url 'home' %}">
+    <img src="{% static 'images/logo3.png' %}" height="30" class="d-inline-block align-top" alt="" loading="lazy">
+  </a>
+  <a class="nav-item nav-link" href="{% url 'about' %}">about</a>
+</nav>
