@@ -1,0 +1,21 @@
+<div class="col">
+    <div class="col-md">
+        <div class="card mb-3">
+              <div class="card-header text-center" id="output">
+                  <h5 class="card-title text-white">Output Details</h5>
+              </div>
+              <div class="card-body">
+                <p class="text-success"><span class="text-dark">Given Path:</span> {{ path }}</p>
+                <p class="text-info"><span class="text-dark">Studio:</span> {{ studio }}</p>
+                <p class="text-warning"><span class="text-dark">Output Location:</span> {{ filename }}</p>
+                <p class="text-danger"><span class="text-dark">No. of Files:</span> {{ file_list|length }}</p>
+                <form method="POST">
+                    {% csrf_token %}
+                    <button class="btn btn-outline-primary my-2 my-sm-0" disabled type="submit">
+                        <span>EXPORT CSV <em>(disabled)</em></span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -3,51 +3,170 @@
 {% block content %}
 
 
+<br/>
+
+
 <br/>  
+<br>
 
-
-<div class="container-fluid">
-	<h1>XML CONVERTER</h1><br/>
-	<form class="form-inline my-2 my-lg-0"  method="POST">
-		{% csrf_token %}
-	  	<input name="test" class="form-control mr-sm-2" type="search" placeholder="Enter directory path..." aria-label="Search">
-	  	<button class="btn btn-outline-success my-2 my-sm-0" type="submit">GENERATE</button>
-	</form><br/>
-	<form method="POST">  
-		{% csrf_token %}
-		<div class="container-fluid">
-			<p>+ CHOOSE A FOLDER WHICH CONTAINS XMLs TO BE CONVERTED TO CSV</p>
-			<input type="file" id="filepicker" name="fileList" webkitdirectory multiple />
-			<ul id="listing"></ul>
+<div class="row">
+	<div class="col"> 
+		<div class="col-md">
+			<div class="card mb-3">
+			  	<div class="card-header text-center" id="input">
+			  		<h5 class="card-title text-white">Input Details</h5>
+			  	</div>
+			  	<div class="card-body">
+					<form class="form-group my-2 my-lg-0"  method="POST">
+						{% csrf_token %}
+		
+						<label>SELECT STUDIO:</label>
+		
+						<select name="studio" id="studio">
+							<option>---</option>
+							<option value="disney">Disney</option>
+							<option value="discovery">Discovery</option>
+							<option value="a&e">A&E</option>
+						</select><br/>
+						<br/>
+		
+						<p class="text-info"><small>Copy the path to the directory of XMLs and paste below...</small><br/>
+							<small><em>e.g., 'C:\Box\EST & Streampix\Metadata By Month\2020\7. July\TV\Disney\30 For 30'</em></small></p>
+						<input 
+							name="directory" 
+							class="form-control mr-sm-2" 
+							type="search" 
+							placeholder="Enter directory path..." 
+							aria-label="Search"
+						/>
+						<br/>
+						<button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+							GENERATE
+						</button>
+					</form>
+			  	</div>
+			</div>
 		</div>
+	</div>
 
-		<br/>
+	{% include 'converter/output-details.html' %}
 
-		<div class="container-fluid">
-			<label for="cars">+ CHOOSE A STUDIO:</label>
-
-			<select name="studio" id="studio">
-			  <option value="disney">Disney</option>
-			  <option value="discovery">Discovery</option>
-			  <option value="a&e">A&E</option>
-			</select>
-		</div>
-
-		<br/>
-
-		<div class="container-fluid">
-			<button class="btn btn-sm btn-primary">GENERATE CSV</button>
-		</div>
-
-	</form>
 </div>
 
+<div class="container-fluid">
+	<div class="row">
+		<!-- <div class="col-md-6">
+			<form class="form-group my-2 my-lg-0"  method="POST">
+				{% csrf_token %}
+
+				<label>+ CHOOSE A STUDIO:</label>
+
+				<select name="studio" id="studio">
+					<option>---</option>
+					<option value="disney">Disney</option>
+					<option value="discovery">Discovery</option>
+					<option value="a&e">A&E</option>
+				</select><br/>
+				<br/>
+
+				<p class="text-info"><small>Copy the path to the directory of XMLs and paste below...</small><br/>
+					<small><em>e.g., 'C:\Box\EST & Streampix\Metadata By Month\2020\7. July\TV\Disney\30 For 30'</em></small></p>
+				<input 
+					name="directory" 
+					class="form-control mr-sm-2" 
+					type="search" 
+					placeholder="Enter directory path..." 
+					aria-label="Search"
+				/>
+				<br/>
+				<button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+					GENERATE
+				</button>
+			</form>
+		</div> -->
+		<!-- <div class="col-md-6 bg-dark">
+			<h4 class="text-light">OUTPUT DETAILS:</h4>
+			<p class="text-success"><span class="text-light">Path:</span> {{ path }}</p>
+			<p class="text-info"><span class="text-light">Studio:</span> {{ studio }}</p>
+			<p class="text-warning"><span class="text-light">Filename:</span> {{ filename }}</p>
+			<p class="text-danger"><span class="text-light">No. of Files:</span> {{ file_list|length }}</p>
+
+		</div> -->
+	</div>
+		<br/>
+	<div class="table-responsive">		
+		{% if file_list %}
+			<table class="table table-sm table-striped table-bordered table-hover table-dark">
+				<thead>
+					<tr class="text-warning">
+						{% for column in columns %}
+							<th scope="col">{{ column }}</th>
+						{% endfor %}
+					</tr>
+				</thead>
+				<tbody>
+					{% for row in rows %}
+					<tr>
+						{% for r in row %}
+							<td scope="row">{{ r }}</td>
+						{% endfor %}
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		{% endif %}
+
+
+		{% if file_list %}
+		TABLE 2:
+		<table class="table">
+			<thead>
+				<tr>
+					{% for key, value in columns.items %}
+						<th scope="col">{{ key }}</th>
+					{% endfor %}
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					{% for key, value in columns.items %}
+						<th scope="col">{{ key }}</th>
+					{% endfor %}	
+				</tr>
+			</tbody>
+		</table>
+		{% endif %}
+
+		<br/><br/>
+		
+	</div>
+</div>
 <br/><hr/>
 
 <div class="container-fluid text-info">
 	<br/>
 	<p>***OPTIONAL / FUTURE FEATURES***</p>
-	<button>CHOOSE HEADERS</button>
+	<form method="POST">  	
+		<!-- READS FILES FROM A DIRECTORY -->
+		{% csrf_token %}
+		<div class="container-fluid">
+			<p>+ CHOOSE A FOLDER WHICH CONTAINS XMLs TO BE CONVERTED TO CSV</p>
+			<input 
+				id="filepicker" 
+				type="file" 
+				name="fileList" 
+				webkitdirectory 
+				multiple 
+			/>
+			<ul id="listing"></ul>
+		</div>
+	
+		<div class="container-fluid">
+			<button class="btn btn-sm btn-primary">GENERATE CSV</button>
+		</div>
+		<hr/>
+	</form>
+	<button>CHOOSE HEADERS/ COLUMNS</button>
 	<button>PREVIEW</button>
 	<br/><br/>
 </div>

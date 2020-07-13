@@ -1,14 +1,10 @@
 import lxml.etree as etree
-import csv
+import csv 
 import os
 
 
-def test_funk(in_put):
-    return "HERE IS " + str(in_put)
-
-
 def create_ae_data_dict(xml_to_parse):
-    # DATA PROVIDED BY A&E
+    # METADATA PROVIDED BY A&E
 
     with open(xml_to_parse, 'rb') as f:
         open_xml = f.read()
@@ -39,12 +35,14 @@ def create_ae_data_dict(xml_to_parse):
 
 
 def create_disney_data_dict(xml_to_parse):
-    # DATA PROVIDED BY DISNEY
+    # METADATA PROVIDED BY DISNEY
 
     with open(xml_to_parse, 'rb') as f:
         open_xml = f.read()
 
     root = etree.fromstring(open_xml)
+
+    # print('----ROOT:', root)
 
     data_dict = {
         'series': '',
@@ -74,11 +72,13 @@ def create_disney_data_dict(xml_to_parse):
             else:
                 data_dict[element.tag] = element.text
 
+    
+
     return data_dict
 
 
 def create_discovery_data_dict(xml_to_parse):
-    # NEXT STUDIO TO SETUP
+    # METADATA PROVIDED BY DISCOVERY
     with open(xml_to_parse, 'rb') as f:
         open_xml = f.read()
 
@@ -102,50 +102,15 @@ def create_discovery_data_dict(xml_to_parse):
             k = "{http://apple.com/itunes/importer}" + key
             for ch in child.iter(k):
                 tag = ch.tag.split("}")[1]
-                data_dict[tag] = ch.text
+                if data_dict[tag] == 'container_position':
+                    data_dict[tag] = int(ch.text)
+                else:
+                    data_dict[tag] = ch.text
 
+    # print (data_dict)
+    # newlist = sorted(data_dict, key=lambda i: i['container_position']) 
+    # print (sorted(data_dict, key = lambda i: i['container_position'])) 
+    # print sorted(data_dict, key = lambda i: (i['container_position'], i['name'])) 
+
+    # return newlist
     return data_dict
-
-
-def process_directory(directory, studio):
-    """ TAKES A DIRECTORY OF XML METADATA AND OUTPUTS A LIST WHICH IS USED BY `write_to_csv()`."""
-    list_data = []
-    for filename in os.listdir(directory):
-        if filename.endswith(".xml"):
-            file = os.path.join(directory, filename)
-            if studio.lower() == "a&e":
-                ae_dict = create_ae_data_dict(file)
-                list_data.append(ae_dict)
-            elif studio.lower() == "disney":
-                disney_dict = create_disney_data_dict(file)
-                list_data.append(disney_dict)
-            elif studio.lower() == 'discovery':
-                discovery_dict = create_discovery_data_dict(file)
-                list_data.append(discovery_dict)
-            else:
-                print("- '" + studio +
-                      "' is not set up to convert XMLs to CSV at this time.")
-                break
-    return list_data
-
-
-def extract_columns(data):
-    """ EXTRACTS COLUMNS TO USE IN `DictWriter()` """
-    columns = []
-
-    column_headers = data[0]
-
-    for key in column_headers:
-        columns.append(key)
-
-    return columns
-
-
-def write_to_csv(filename, data):
-    columns = extract_columns(data)
-
-    with open(filename, 'w', newline='') as output_file:
-        writer = csv.DictWriter(output_file, fieldnames=columns)
-        writer.writeheader()
-        for row in data:
-            writer.writerow(row)
